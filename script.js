@@ -35,6 +35,10 @@ let randomWord;
 let score = 0;
 let time = 10;
 
+text.focus();
+
+const timeInterval = setInterval(updateTime, 1000);
+
 // could be done with API of course
 function getRandomWord() {
   return words[Math.floor(Math.random() * words.length)];
@@ -50,6 +54,24 @@ function updateScore() {
   scoreEl.innerHTML = score;
 }
 
+function updateTime() {
+  time--;
+  timeEl.innerHTML = time + 's';
+  if (time === 0) {
+    clearInterval(timeInterval);
+    gameOver();
+  }
+}
+
+function gameOver() {
+  endgameEl.innerHTML = `
+    <h1>Time ran out</h1>
+    <p>Your final score is ${score}</p>
+    <button onclick="location.reload()">Reload</button>
+  `;
+  endgameEl.style.display = 'flex';
+}
+
 addWordToDOM();
 
 text.addEventListener('input', (e) => {
@@ -58,5 +80,7 @@ text.addEventListener('input', (e) => {
     addWordToDOM();
     updateScore();
     e.target.value = '';
+    time += 5;
+    updateTime();
   }
 });
